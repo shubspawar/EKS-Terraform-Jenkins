@@ -1,7 +1,7 @@
 module "vpc" {
   source = "terraform-aws-modules/vpc/aws"
 
-  name = "jenkins-vpc"
+  name = "eks-vpc"
   cidr = var.vpc_cidr
 
   azs            = data.aws_availability_zones.azs.names
@@ -38,8 +38,13 @@ module "eks" {
 
   cluster_endpoint_public_access  = true
 
-  vpc_id                   = module.vpc.default_vpc_id
+  vpc_id                   = module.vpc.vpc_id
   subnet_ids               = module.vpc.private_subnets
+
+  tags = {
+    environment = "development"
+    application = "myjenkins-server"
+  }
   
 
   eks_managed_node_groups = {
